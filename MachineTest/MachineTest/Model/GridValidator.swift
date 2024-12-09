@@ -29,7 +29,7 @@ class GridModel {
     }
     
     func isGridGameComplete() -> Bool {
-        return cells.allSatisfy{ $0.isGreen }
+        return self.cells.allSatisfy{ $0.isGreen }
     }
 }
 

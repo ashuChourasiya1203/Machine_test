@@ -56,12 +56,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         let isGreen = self.gridViewModel.gridModel?.cells[indexPath.item].isGreen ?? false
-        
-        if self.gridViewModel.redCellIndex == indexPath.item {
-            cell.backgroundColor = .red
-        } else {
-            cell.backgroundColor = isGreen ? .green : .gray
-        }
+        let isGridEqual = self.gridViewModel.redCellIndex == indexPath.item
+        cell.backgroundColor = isGridEqual ? .red : isGreen ? .green : .gray
         return cell
     }
     
@@ -72,8 +68,12 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let gridSize = CGFloat(self.gridViewModel.gridSize)
-        let cellWidth = (collectionView.frame.width - (gridSize - 10)) / gridSize
+        let collectionViewWidth = collectionView.frame.width
+        let numberOfCellPerRow = CGFloat(self.gridViewModel.gridSize)
+        let interItemSpacing = 10.0
+        let sectionInsets = 20.0
+        let totolSpacing = (numberOfCellPerRow - 1) * interItemSpacing + sectionInsets
+        let cellWidth = (collectionViewWidth - totolSpacing)/numberOfCellPerRow
         return CGSize(width: cellWidth, height: cellWidth)
     }
 }

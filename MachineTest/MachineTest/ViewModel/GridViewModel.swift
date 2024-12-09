@@ -51,14 +51,14 @@ class GridViewModel {
     }
     
     func startGameLoop() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 3...5)) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
             guard let self else { return }
             if let redCellIndex = self.redCellIndex {
                 self.updateCell?(redCellIndex)
-            }
-            if let count = self.gridModel?.cells.count {
-                self.redCellIndex = Int.random(in: 0..<count)
-                self.updateCell?(self.redCellIndex ?? 0)
+                if let count = self.gridModel?.cells.count {
+                    self.redCellIndex = Int.random(in: 0..<count)
+                    self.updateCell?(self.redCellIndex ?? 0)
+                }
             }
         }
     }
