@@ -12,7 +12,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MachineTest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="MachineTest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -44,6 +44,9 @@
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Submit"/>
+                                        <connections>
+                                            <action selector="submitButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="a58-Ue-c9C"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -90,6 +93,10 @@
                             <constraint firstItem="EX7-vI-389" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="xhq-tS-1BK"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="gridCollection" destination="7CK-ya-tPH" id="ysH-T4-V1j"/>
+                        <outlet property="textField" destination="h0H-uf-9oy" id="xEo-yn-hKM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
