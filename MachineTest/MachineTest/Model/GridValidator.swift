@@ -16,3 +16,23 @@ class GridValidator {
         return gridSize > 0 && gridSize < 100
     }
 }
+
+class GridModel {
+    private(set) var cells: [GridCell]
+    
+    init(numberOfCells: Int) {
+        self.cells = Array(repeating: GridCell(), count: numberOfCells)
+    }
+    
+    func makeCellAsGreen(at index: Int) {
+        self.cells[index].isGreen = true
+    }
+    
+    func isGridGameComplete() -> Bool {
+        return cells.allSatisfy{ $0.isGreen }
+    }
+}
+
+struct GridCell {
+    var isGreen = false
+}

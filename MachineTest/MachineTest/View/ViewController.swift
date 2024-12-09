@@ -10,25 +10,30 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var gridCollection: UICollectionView!
     @IBOutlet weak var textField: UITextField!
-        
+    
+    var gridViewModel = GridViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.gridCollection.delegate = self
         self.gridCollection.dataSource = self
+        self.gridCollection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        self.setUpBindingWithModel()
     }
     
-    @IBAction func submitButtonClick(_ sender: UIButton) {
-        let gridSize = Int(self.textField.text ?? "") ?? 0
-        guard GridValidator.isValidGridSize(gridSize),
-              GridValidator.isValidGridNumber(gridSize)
-        else {
-            self.showAlert(message: "Please enter valid grid size")
-            return
+    private func setUpBindingWithModel() {
+        self.gridViewModel.releadCollectionView = { [weak self] in
+            self?.gridCollection.reloadData()
         }
-         
         
+        self.gridViewModel.showAlert = { [weak self] message in
+            self?.showAlert(message: message)
+        }
+        
+        self.gridViewModel.updateCell = { [weak self] index in
+            self?.gridCollection.reloadItems(at: [IndexPath(item: index, section: 0)])
+        }
     }
-    
     
     private func showAlert(message: String) {
         let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -36,18 +41,39 @@ class ViewController: UIViewController {
         alert.addAction(okAction)
         self.present(alert, animated: true)
     }
+    
+    @IBAction func submitButtonClick(_ sender: UIButton) {
+        let number = Int(self.textField.text ?? "") ?? 0
+        self.gridViewModel.validateAndGenerateGrid(number)
+    }
 }
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
+        return self.gridViewModel.numberOfCells
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let isGreen = self.gridViewModel.gridModel?.cells[indexPath.item].isGreen ?? false
+        
+        if self.gridViewModel.redCellIndex == indexPath.item {
+            cell.backgroundColor = .red
+        } else {
+            cell.backgroundColor = isGreen ? .green : .gray
+        }
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.gridViewModel.makeCellAsGreen(at: indexPath.item)
     }
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let gridSize = CGFloat(self.gridViewModel.gridSize)
+        let cellWidth = (collectionView.frame.width - (gridSize - 10)) / gridSize
+        return CGSize(width: cellWidth, height: cellWidth)
+    }
 }
